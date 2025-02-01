@@ -20,14 +20,16 @@ const authenticateToken = (req, res, next) => {
     });
 };
 
-const authorizeAdmin = (req, res, next) => {
-    const { rol_id } = req.user;
+const checkRole = (roles) => {
+    return (req, res, next) => {
+        const { rol_id } = req.user;
 
-    if (rol_id !== 1) {
-        return res.status(403).json({ message: 'Acceso denegado, se requiere rol de administrador' });
-    }
+        if (!roles.includes(rol_id)) {
+            return res.status(403).json({ message: 'Acceso denegado, no tienes permiso para realizar esta acción' });
+        }
 
-    next();
+        next();
+    };
 };
 
-module.exports = { authenticateToken, authorizeAdmin };
+module.exports = { authenticateToken, checkRole };

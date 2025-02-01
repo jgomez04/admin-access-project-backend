@@ -25,7 +25,8 @@ exports.updateUser = async (req, res) => {
 exports.getAllUsersByAdministradorId = async (req, res) => {
     try {
         const admin_from_token = req.user.id;
-        const users = await userService.getAllUsersByAdministradorId(admin_from_token);
+        const { email } = req.query;
+        const users = await userService.getAllUsersByAdministradorId(admin_from_token, email);
         res.status(200).json({ message: 'Usuarios consultados con éxito', users });
     } catch (error) {
         res.status(500).json({ message: 'Error al obtener los usuarios', error });
@@ -40,6 +41,15 @@ exports.deleteUser = async (req, res) => {
         res.status(200).json(result);
     } catch (err) {
         res.status(500).json({ message: err.message });
+    }
+};
+
+exports.getAllUsersByRolId = async (req, res) => {
+    try {
+        const users = await userService.getAllUsersByRolId(req.params.id);
+        res.status(200).json({ message: 'Usuarios consultados con éxito', users });
+    } catch (error) {
+        res.status(500).json({ message: 'Error al obtener los usuarios', error });
     }
 };
 

@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const User = require('../models/user.model');
 const dotenv = require('dotenv');
+const User = require('../models/user.model');
+const RolePermission = require('../models/rolePermission.model');
 
 dotenv.config();
 
@@ -21,11 +22,19 @@ exports.loginUser = async (email, password) => {
             throw new Error('Contraseña incorrecta');
         }
 
+        // Consultar los permisos del rol
+        const rolePermissions = await RolePermission.findAll({
+            where: { rol_id: user.rol_id },
+            attributes: ['permiso_id']
+        });
+
+        const permisos = rolePermissions.map(rp => rp.permiso_id);
+
         // Generar un token JWT
         const token = jwt.sign(
-            { id: user.id, email: user.email, rol_id: user.rol_id },
+            { id: user.id, nombre: user.nombre, email: user.email, rol_id: user.rol_id, permisos },
             SECRET_KEY,
-            { expiresIn: '7m' } // El token expirará en 7 minutos
+            { expiresIn: '1h' }
         );
 
         return token;

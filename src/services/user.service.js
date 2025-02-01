@@ -1,6 +1,5 @@
 const User = require('../models/user.model'); 
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
 exports.createUser = async (nombre, email, password, rol_id, administrador_id) => {
     try {
@@ -61,9 +60,13 @@ exports.updateUser = async (id, nombre, email, rol_id, administrador_id, admin_f
     }
 };
 
-exports.getAllUsersByAdministradorId = async (administrador_id) => {
+exports.getAllUsersByAdministradorId = async (administrador_id, email) => {
     try {
-        const users = await User.findAll({ where: { administrador_id } });
+        const whereClause = { administrador_id };
+        if (email) {
+            whereClause.email = email;
+        }
+        const users = await User.findAll({ where: whereClause, attributes: { exclude: ['password'] } });
         return users;
     } catch (err) {
         throw new Error(`Error al obtener los usuarios: ${err.message}`);
@@ -88,4 +91,13 @@ exports.deleteUser = async (id, admin_from_token) => {
         throw new Error(`Error al eliminar el usuario: ${err.message}`);
     }
 };
+
+exports.getAllUsersByRolId = async (rol_id) => {
+    try {
+        const users = await User.findAll({ where: { rol_id }, attributes: { exclude: ['password'] }});
+        return users;
+    } catch (err) {
+        throw new Error(`Error al obtener los usuarios: ${err.message}`);
+    }
+}
 

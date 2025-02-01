@@ -1,5 +1,5 @@
 {
-  "name": "admin-access-project",
+  "name": "admin-access-project-backend",
   "version": "1.0.0",
   "description": "Prueba tecnica",
   "main": "./src/server.js",
