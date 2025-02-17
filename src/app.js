@@ -10,7 +10,6 @@ const userRoutes = require('./routes/user.routes');
 const authRoutes = require('./routes/auth.routes');
 const projectRoutes = require('./routes/project.routes');
 
-// Definir rutas base
 app.use('/api/v1', userRoutes);
 app.use('/api/v1', authRoutes);
 app.use('/api/v1', projectRoutes);

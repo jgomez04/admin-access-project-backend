@@ -45,18 +45,18 @@ exports.getProjectsByUserId = async (userId) => {
     try {
         const projects = await Project.findAll({
             where: {
-                '$usuarios.id$': userId // Filtra los proyectos donde el usuario con id=userId está asignado
+                '$usuarios.id$': userId
             },
             include: [
                 {
                     model: User,
-                    as: 'usuarios', // Relación de usuarios en el proyecto
+                    as: 'usuarios',
                     attributes: ['id', 'nombre', 'email'],
-                    through: { attributes: [] } // Asegura que no se incluyan atributos de la tabla intermedia
+                    through: { attributes: [] }
                 },
                 {
                     model: User,
-                    as: 'administrador', // Si también quieres obtener el administrador del proyecto
+                    as: 'administrador',
                     attributes: ['id', 'nombre']
                 }
             ],
@@ -129,7 +129,6 @@ exports.getProjectById = async (id, userId) => {
     try {
         const user = await User.findByPk(userId);
         if (user.rol_id !== ROLES.ADMIN) {
-            // Verificar si el usuario está asignado al proyecto
             const userProject = await UserProject.findOne({
                 where: {
                     proyecto_id: id,

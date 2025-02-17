@@ -7,11 +7,9 @@ exports.createUser = async (nombre, email, password, rol_id, administrador_id) =
         if (userExists) {
             throw new Error('El usuario ya existe');
         }
-
-        // Hash de la contraseña
+        
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Crear el usuario
         const newUser = await User.create({
             nombre,
             email,
@@ -28,7 +26,6 @@ exports.createUser = async (nombre, email, password, rol_id, administrador_id) =
 
 exports.updateUser = async (id, nombre, email, rol_id, administrador_id, admin_from_token) => {
     try {
-        // Buscar el usuario por ID
         const user = await User.findByPk(id);
         if (user.administrador_id !== admin_from_token) {
             throw new Error('Acceso denegado, este usuario no esta bajo su administración');
@@ -38,15 +35,12 @@ exports.updateUser = async (id, nombre, email, rol_id, administrador_id, admin_f
             throw new Error('Usuario no encontrado');
         }
 
-        // Verificar si el email está siendo modificado
         if (email && email !== user.email) {
             const userExists = await User.findOne({ where: { email } });
             if (userExists) {
                 throw new Error('El email ya está en uso');
             }
         }
-
-        // Actualizar el usuario
         await user.update({
             nombre,
             email,
@@ -75,7 +69,6 @@ exports.getAllUsersByAdministradorId = async (administrador_id, email) => {
 
 exports.deleteUser = async (id, admin_from_token) => {
     try {
-        // Buscar el usuario por ID
         const user = await User.findByPk(id);
         if (user.administrador_id !== admin_from_token) {
             throw new Error('Acceso denegado, este usuario no esta bajo su administración');

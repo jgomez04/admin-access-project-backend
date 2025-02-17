@@ -22,7 +22,7 @@ const Project = sequelize.define('proyectos', {
     hooks: {
         afterCreate: (project, options) => {
             if (project.fecha_creacion) {
-                project.fecha_creacion.setHours(project.fecha_creacion.getHours() - 5); // Ajustar a GMT-5
+                project.fecha_creacion.setHours(project.fecha_creacion.getHours() - 5);
             }
         }
     }
